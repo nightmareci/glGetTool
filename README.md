@@ -27,10 +27,10 @@ that contain the filter string anywhere within them will be printed out with
 their values.
 
 ```sh
-# default, the latest version of OpenGL, compatibility profile, is used (4.6
-# for now). The default will not work on macOS, as macOS only allows core
-# profile with versions 3.0 and above, and (for now, and likely always) macOS
-# only supports up to 4.1.
+# The default is the latest version of OpenGL, compatibility profile (4.6 for
+# now). The default will not work on macOS, as macOS only allows core profile
+# with versions 3.0 and above, and (for now, and likely always) macOS only
+# supports up to 4.1.
 glGet GL_MAX_TEXTURE_SIZE
 
 # You can specify an OpenGL version to use. By default, compatibility profile
