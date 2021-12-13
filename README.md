@@ -48,4 +48,5 @@ glGet GL_MAX_TEXTURE_SIZE 3.0 ES
 glGet gl_max_texture_size 3.0 es
 ```
 
+## License
 **Public domain** (CC0)
