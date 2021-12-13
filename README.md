@@ -1,35 +1,51 @@
-MentalGL - OpenGL debugging utility to review entire render state
-=================================================================
+# glGetTool - OpenGL utility to get render states
 
-**Public domain** (CC0) header-only library written in C99.
+## Building
+You need a C99 compiler, CMake 3.10, OpenGL, and SDL 2.0.
 
-Code Example
-------------
+```sh
+# Try it out without installing.
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./build/glGet
 
-Here is a brief example how to use this utility library:
-```c
-// Include and implement MentalGL in a single source file
-#define MENTAL_GL_IMPLEMENTATION
-#include "mental_gl.h"
+# Installation is also supported; you can set the prefix to whatever you want.
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+cmake --build build
+sudo cmake --install build
+glGet
 
-// Do OpenGL stuff ...
-
-// Query current OpenGL state
-MGLRenderState rs;
-mglQueryRenderState(&rs);
-
-// Print queries OpenGL state (ignore optional formatting descriptor, otherwise see 'MGLQueryFormatting' structure)
-MGLString s = mglPrintRenderState(&rs, NULL);
-
-// Print result
-puts(mglGetUTF8String(s));
-
-// Free opaque string object
-mglFreeString(s);
+# When built for Windows with MSVC/Visual Studio, SDL 2.0 is linked statically,
+# so you don't need to worry about `SDL2.dll`. VCPKG can be used to produce
+# such a build.
 ```
 
-Output Example
---------------
+## Usage Examples
 
-![ExamplePicture1](MentalGL_Example_1.png)
+You use the command line utility, `glGet`, with a filter string. All enum names
+that contain the filter string anywhere within them will be printed out with
+their values.
 
+```sh
+# default, the latest version of OpenGL, compatibility profile, is used (4.6
+# for now). The default will not work on macOS, as macOS only allows core
+# profile with versions 3.0 and above, and (for now, and likely always) macOS
+# only supports up to 4.1.
+glGet GL_MAX_TEXTURE_SIZE
+
+# You can specify an OpenGL version to use. By default, compatibility profile
+# is used.
+glGet GL_MAX_TEXTURE_SIZE 1.0
+
+# And, lastly, you can specify the context profile to use. Invalid combinations
+# of version number and profile will default to 4.6 compatibility. macOS
+# doesn't support ES profile at all.
+glGet GL_MAX_TEXTURE_SIZE 3.0 Core
+glGet GL_MAX_TEXTURE_SIZE 3.0 Compatibility
+glGet GL_MAX_TEXTURE_SIZE 3.0 ES
+
+# Case doesn't matter
+glGet gl_max_texture_size 3.0 es
+```
+
+**Public domain** (CC0)

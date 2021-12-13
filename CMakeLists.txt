@@ -1,42 +1,41 @@
+cmake_minimum_required(VERSION 3.10)
+project(glGetTool LANGUAGES C)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED TRUE)
 
-# === CMake lists for MentalGL - (26/03/2018) ===
+set(OpenGL_GL_PREFERENCE GLVND)
+find_package(OpenGL REQUIRED)
+find_package(SDL2 REQUIRED)
+if(OpenGL_FOUND AND SDL2_FOUND)
+	include_directories(thirdparty)
 
-cmake_minimum_required(VERSION 2.8)
-project(MentalGL)
-
-
-# === Build path ===
-
-set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/build)
-set(EXECUTABLE_OUTPUT_PATH ${OUTPUT_DIR} CACHE PATH "Build directory" FORCE)
-set(LIBRARY_OUTPUT_PATH ${OUTPUT_DIR} CACHE PATH "Build directory" FORCE)
-
-
-# === Test Projects ===
-
-find_package(OpenGL)
-find_package(GLUT)
-
-add_library(MentalGL STATIC "${PROJECT_SOURCE_DIR}/mental_gl.h")
-set_target_properties(MentalGL PROPERTIES LINKER_LANGUAGE C DEBUG_POSTFIX "D")
-
-if(OpenGL_FOUND AND GLUT_FOUND)
-	include_directories(
-		"${GLUT_INCLUDE_DIR}"
-		"${PROJECT_SOURCE_DIR}/thirdparty/glad/include"
+	add_executable(glGet
+		glGet.c
+		thirdparty/glad/glad.c
+		thirdparty/glad/glad.h
+		thirdparty/glad/khrplatform.h
 	)
-	
-	# Test 1
-	add_executable(
-		test1
-		"${PROJECT_SOURCE_DIR}/test1.c"
-		"${PROJECT_SOURCE_DIR}/thirdparty/glad/src/glad.c"
-		"${PROJECT_SOURCE_DIR}/thirdparty/glad/include/glad/glad.h"
+
+	target_link_libraries(glGet PUBLIC
+		SDL2::SDL2main
+		${OPENGL_LIBRARIES}
 	)
-	set_target_properties(test1 PROPERTIES LINKER_LANGUAGE C DEBUG_POSTFIX "D")
-	target_link_libraries(test1 ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
+   	if(UNIX)
+        target_link_libraries(glGet PUBLIC SDL2::SDL2)
+		include(GNUInstallDirs)
+        install(TARGETS glGet DESTINATION ${CMAKE_INSTALL_BINDIR})
+    else()
+        if(WIN32)
+            target_link_libraries(glGet PUBLIC SDL2::SDL2-static)
+        else()
+            target_link_libraries(glGet PUBLIC SDL2::SDL2)
+        endif()
+        install(TARGETS glGet DESTINATION .)
+    endif()
+
 else()
-	message("missing OpenGL and/or GLUT to generate tests")
+	message("Missing OpenGL and/or SDL 2.0.")
 endif()
 
 
