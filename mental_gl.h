@@ -14,6 +14,7 @@
  *  #define MENTAL_GL_GETINTEGERI_V
  *  #define MENTAL_GL_GETINTEGER64I_V
  *
+ *  // Include header providing OpenGL before including mental_gl.h. Must provide support up to and including 4.3 compatibility profile.
  *  // Include and implement MentalGL in a single source file
  *  #define MENTAL_GL_IMPLEMENTATION
  *  #include "mental_gl.h"
@@ -371,13 +372,6 @@ void mglFreeString(MGLString s);
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#ifdef __APPLE__
-#   include <OpenGL/OpenGL.h>
-#else
-#   include <GL/GL.h>
-#   include <GL/glext.h>
-#endif
 
 
 // *****************************************************************

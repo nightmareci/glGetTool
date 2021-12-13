@@ -19,6 +19,7 @@ if(OpenGL_FOUND AND SDL2_FOUND)
 	target_link_libraries(glGet PUBLIC
 		SDL2::SDL2main
 		${OPENGL_LIBRARIES}
+		${CMAKE_DL_LIBS}
 	)
 
    	if(UNIX)
